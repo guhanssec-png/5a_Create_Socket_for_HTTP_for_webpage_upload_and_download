@@ -16,6 +16,28 @@ To write a PYTHON program for socket for HTTP for web page upload and download
 6.Stop the program
 <BR>
 ## Program 
+```
+import socket 
+def send(host, port, req, data=b''): 
+with socket.socket() as s: 
+s.connect((host, port)) 
+s.sendall(req.encode() + data) 
+return s.recv(4096).decode() 
+def upload(host, port, file): 
+data = open(file, 'rb').read() 
+req = f"POST /upload HTTP/1.1\r\nHost: {host}\r\nContent-Length:   
+return send(host, port, req, data) 
+def download(host, port, file): 
+res = send(host, port, f"GET /{file} HTTP/1.1\r\nHost: {host}\r\n\r\n") 
+open(file, 'wb').write(res.split('\r\n\r\n', 1)[1].encode()) 
+if __name__ == "__main__": 
+h, p, f = 'example.com', 80, 'example.txt' 
+print("Upload:", upload(h, p, f)) 
+download(h, p, f) 
+print("Downloaded.")
+```
 ## OUTPUT
+<img width="812" height="492" alt="image" src="https://github.com/user-attachments/assets/4c760325-7830-461f-a5d1-a098c8a9cb0a" />
+
 ## Result
 Thus the socket for HTTP for web page upload and download created and Executed
